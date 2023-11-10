@@ -1,0 +1,1 @@
+A stripped down validator of UniversalDependencies from https://github.com/UniversalDependencies/tools/

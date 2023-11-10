@@ -1,6 +1,7 @@
 # .gitignore
 *.pt
 data/
+logs/
 !data/get.sh
 src/models/wl-coref-ncc/converted_data*
 nohup.out

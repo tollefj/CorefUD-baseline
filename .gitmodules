@@ -1,0 +1,3 @@
+[submodule "src/corefud-scorer"]
+	path = src/corefud-scorer
+	url = git@github.com:ufal/corefud-scorer.git

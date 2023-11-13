@@ -33,12 +33,10 @@ parser.add_argument("--max_links", default=None, type=int, help="Max antecedent 
 parser.add_argument("--right", default=50, type=int, help="Reserved space for right context, if any.")
 parser.add_argument("--seed", default=42, type=int, help="Random seed.")
 parser.add_argument("--segment", default=512, type=int, help="Segment size")
-parser.add_argument("--train", default=[], nargs="+", type=str, help="Additional train data.")
 parser.add_argument("--warmup", default=0.1, type=float, help="Warmup ratio.")
 
 
 def main(args: argparse.Namespace) -> None:
-    # Fix random seeds and threads
     tf.keras.utils.set_random_seed(args.seed)
     tf.config.threading.set_inter_op_parallelism_threads(0)
     tf.config.threading.set_intra_op_parallelism_threads(0)
@@ -86,11 +84,6 @@ def main(args: argparse.Namespace) -> None:
     langs = [f"{DATA_BASE_PATH}/{lang}/{lang}" for lang in langs]
 
     print("Langs", langs)
-    extra_trains = []
-    if len(args.train) > 0:
-        extra_trains = [f"data/{lang}/{lang}" for lang in args.train]
-
-    print(f"Extra trains: {extra_trains}")
     print("Loading trains + devs")
     trains = []
     devs = []
@@ -100,7 +93,7 @@ def main(args: argparse.Namespace) -> None:
     def process_dataset(path, split):
         return Dataset(f"{path}-corefud-{split}.conllu", tokenizer)
 
-    for path in tqdm(langs + extra_trains, desc="Processing training data"):
+    for path in tqdm(langs, desc="Processing training data"):
         trains.append(process_dataset(path, "train"))
 
     for path in tqdm(langs, desc="Processing dev and test"):
@@ -134,7 +127,6 @@ def main(args: argparse.Namespace) -> None:
         tests = [(test, batch(test.pipeline(tags_map, False, args))) for test in tests]
         devs_blind = [(dev, batch(dev.pipeline(tags_map, False, args))) for dev in devs_blind]
 
-        # Create and train the model
         print("Creating the model...")
         print("Tags: ", len(tags))
         model = Model(tags, args)

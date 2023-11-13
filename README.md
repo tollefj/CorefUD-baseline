@@ -19,7 +19,9 @@ Based on https://github.com/ufal/crac2022-corpipe
 3. Train the model in `src/models/simple-corpipe`. Example:
     ```bash
     cd src/models/simple-corpipe
-    python3 train.py --langs germanic
+    python train.py --langs germanic
+    # or with a specific language, e.g. no_bokmaalnarc:
+    python train.py --langs no_bokmaalnarc
     ```
     This will run the "germanic languges" found in the following definitions:
     ```
